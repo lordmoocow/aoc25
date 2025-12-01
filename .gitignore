@@ -205,3 +205,6 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# challenge input text is not intended to be shared
+days/**/input.txt
