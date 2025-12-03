@@ -15,12 +15,10 @@ def part1(input_data: str) -> int:
     """Invalid Product IDs"""
     product_ranges = read_product_ids(input_data)
 
-    count = 0
-    for start, end in product_ranges:
-        for i in range(start, end+1):
-            if not validate(i):
-                count += i
-    return count
+    return sum(
+        i for start, end in product_ranges
+        for i in range(start, end + 1)
+        if not validate(i)
+    )
              
-
 
