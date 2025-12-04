@@ -1,9 +1,10 @@
 """Advent of Code 2025 - Day 04."""
 
-def load_diagram(input_data: str) -> list[str]:
-    return input_data.strip().splitlines()
+def load_diagram(input_data: str) -> list[list[str]]:
+    return [[x for x in line] for line in input_data.strip().splitlines()]
 
-def accessible(diagram: list[str], x, y: int) -> bool:
+
+def accessible(diagram: list[list[str]], x, y: int) -> bool:
     count = 0
     for a in range(-1, 2):
         if x+a < 0 or x+a >= len(diagram):
@@ -13,16 +14,36 @@ def accessible(diagram: list[str], x, y: int) -> bool:
                 continue
             if not (a == b == 0) and diagram[x+a][y+b] == "@":
                 count += 1
-                
     return count < 4
+
 
 def part1(input_data: str) -> int:
     """Accessible Forklifts"""
     diagram = load_diagram(input_data)
     return sum(
         1 
-        for x,row in enumerate(diagram)
-        for y,cell in enumerate(row)
+        for x, row in enumerate(diagram)
+        for y, cell in enumerate(row)
         if cell == "@" and accessible(diagram, x, y)
     )
 
+
+def part2(input_data: str) -> int:
+    """Shifting Paper"""
+    diagram = load_diagram(input_data) 
+    removable = []
+    removed = 0
+    while True:
+        removable = [
+            (x,y) 
+            for x, row in enumerate(diagram)
+            for y, cell in enumerate(row)
+            if cell == "@" and accessible(diagram, x, y)
+        ]
+        if len(removable) <= 0:
+            break
+        for rollX, rollY in removable:
+            diagram[rollX][rollY] = "."
+        removed += len(removable)
+    return removed
+        
