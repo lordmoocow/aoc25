@@ -23,3 +23,20 @@ def part1(input_data: str) -> int:
         if isfresh(fresh, ingredient)
     )
 
+
+def part2(input_data: str) -> int:
+    fresh, _ = load_stock(input_data)
+    fresh.sort()
+
+    ranges = [fresh[0]]
+    for start, end in fresh[1:]:
+        min_start, max_end = ranges[-1]
+        if start <= max_end:
+            ranges[-1] = (min_start, max(max_end, end))
+        else:
+            ranges.append((start, end))
+
+    return sum(
+        end - start + 1 
+        for start, end in ranges
+    )
