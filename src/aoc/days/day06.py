@@ -1,5 +1,8 @@
 """Advent of Code 2025 - Day 06."""
 
+import math
+
+
 def load_worksheet(input_data: str) -> tuple[list[list[int]], list[str]]:
     lines = input_data.strip().splitlines()
 
@@ -15,6 +18,26 @@ def load_worksheet(input_data: str) -> tuple[list[list[int]], list[str]]:
 
     return (numbers, ops)
 
+
+def solve_worksheet_rtlc(numbers: list[str]):
+    problem: list[int] = []
+    for col in zip(*map(reversed, numbers)):
+        nstr = ''.join(col[:-1]).strip()
+        if not nstr.isdigit():
+            continue
+
+        problem.append(int(nstr))
+        operator = col[-1]
+
+        if operator != " ":
+            if operator == "+":
+                yield sum(problem)
+            elif operator == "*":
+                yield math.prod(problem)
+
+            problem.clear()
+
+
 def part1(input_data: str) -> int:
     """Cephalopod Worksheet"""
     numbers, ops = load_worksheet(input_data)
@@ -28,3 +51,8 @@ def part1(input_data: str) -> int:
 
     return sum(answers)
 
+
+def part2(input_data: str) -> int:
+    """Cephalopod Worksheet Correction"""
+    lines = input_data.splitlines()
+    return sum(solve_worksheet_rtlc(lines))
