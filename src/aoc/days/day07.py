@@ -35,3 +35,31 @@ def part1(input_data: str) -> int:
     return splits
 
 
+def part2(input_data: str) -> int:
+    rows = input_data.strip().splitlines()
+    max_x = len(rows[0])
+    beam = rows[0].index("S")
+
+    # At the manifold exit we know there are no additional possible timelines
+    # And because I know that each splitter immediately before that introduces
+    # 2 possible timelines, and each previous split also introduced 2 timelines.
+    # So in theory, if I work from the exit I know exactly how many possible timelines
+    # that I've come accross, I can accumulate these timelines as I travel back in time
+    # and determine the total number of possible timelines for any given entry point.
+
+    # We know there is always at least 1 timeline that will exit the manifold
+    timeline: list[int] = [1] * max_x
+
+    rows.reverse()
+    for row in rows[:-1]:
+        # Collate splitters in current manifold space
+        splitters = [i for i, v in enumerate(row) if v == "^"]
+        for splitter in splitters:
+            # Because this is travelling in reverse, we essentially need to recombine
+            # the beams to trace their timelines.
+            # The accumulated timeline of each beam is therefore combined into the
+            # manifold space where it would originally have split.
+            timeline[splitter] = timeline[splitter-1] + timeline[splitter+1]
+            
+    # the tachyon entry point determines possible timelines it will create
+    return timeline[beam]
